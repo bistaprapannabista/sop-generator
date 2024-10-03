@@ -1,5 +1,31 @@
 import streamlit as st
-import ollama
+import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+generation_config = {
+  "temperature": 1,
+  "top_p": 0.95,
+  "top_k": 64,
+  "max_output_tokens": 8192,
+  "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+  model_name="gemini-1.5-pro",
+  generation_config=generation_config,
+  # safety_settings = Adjust safety settings
+  # See https://ai.google.dev/gemini-api/docs/safety-settings
+)
+
+chat_session = model.start_chat(
+  history=[
+  ]
+)
 
 st.set_page_config(layout="wide") 
 
@@ -25,12 +51,13 @@ with st.sidebar:
 
 if submit_button:
     prompt = f"Write a clear and concise {no_of_words}-word statement of purpose for a student from Nepal who has completed {qualification} education, focusing on subjects such as {studied_subjects}. The student is applying to study in {destination_country}. Include details about their academic background, their interest in {destination_country}'s education system, and their curiosity about its culture. Emphasize the student's goals to contribute to society through their education and experience gained in {destination_country}, as well as how this aligns with their life aim: {life_aim}. Use simple language and easy-to-understand vocabulary, as English is not the student's native language."
-    response = ollama.chat(model='llama3.2', messages=[{
-        'role': 'user',
-        'content': prompt},])
-    output = response['message']['content']
-    st.text(output)
-    st.download_button("Click here to download", output)
+    # response = ollama.chat(model='llama3.2', messages=[{
+    #     'role': 'user',
+    #     'content': prompt},])
+    # output = response['message']['content']
+    output = chat_session.send_message(prompt)
+    st.text(output.text)
+    st.download_button("Click here to download", output.text)
 
 
 footer = """
