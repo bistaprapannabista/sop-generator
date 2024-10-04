@@ -2,6 +2,8 @@ import streamlit as st
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+from textblob import TextBlob
+import random
 
 load_dotenv()
 
@@ -27,7 +29,13 @@ chat_session = model.start_chat(
   ]
 )
 
-st.set_page_config(layout="wide") 
+# def humanize_text(text):
+#     blob = TextBlob(text)
+#     # You can add more complex processing here
+#     return str(blob.correct())  # Returns corrected text
+
+
+st.set_page_config(page_title="SOP Generator",page_icon="✍️",layout="wide",initial_sidebar_state="expanded") 
 
 st.title("🤖 SOP Generator: Your own AI to write SOP. ✍️")
 
@@ -50,14 +58,17 @@ with st.sidebar:
 
 
 if submit_button:
-    prompt = f"Write a clear and concise {no_of_words}-word statement of purpose for a student from Nepal who has completed {qualification} education, focusing on subjects such as {studied_subjects}. The student is applying to study in {destination_country}. Include details about their academic background, their interest in {destination_country}'s education system, and their curiosity about its culture. Emphasize the student's goals to contribute to society through their education and experience gained in {destination_country}, as well as how this aligns with their life aim: {life_aim}. Use simple language and easy-to-understand vocabulary, as English is not the student's native language."
+    prompt = f"Assist in writing a {no_of_words}-word statement of purpose for a Nepali student who has completed {qualification}. The student has studied {studied_subjects} and is applying to study in {destination_country}. Include details about their academic journey, specific reasons for choosing {destination_country}'s education system, and their fascination with its culture. Also, reflect on how the education and experiences gained will help the student contribute to society, aligned with their personal goal of {life_aim}. Use simple language suitable for someone whose first language is not English"
     # response = ollama.chat(model='llama3.2', messages=[{
     #     'role': 'user',
     #     'content': prompt},])
     # output = response['message']['content']
-    output = chat_session.send_message(prompt)
-    st.text(output.text)
-    st.download_button("Click here to download", output.text)
+    response = chat_session.send_message(prompt)
+    # output = text = Humanizer.humanize(response.text)
+    output = response.text
+    # st.text(output)
+    st.code(output)
+    st.download_button("Click here to download", output)
 
 
 footer = """
