@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
-from textblob import TextBlob
+# from textblob import TextBlob
 import random
 
 load_dotenv()
@@ -46,6 +46,8 @@ with st.sidebar:
 
     life_aim = st.text_input(label="Aim in life")
 
+    currently_busy_on = st.text_input(label="Currently Busy on")
+
     destination_country = st.selectbox(label="Destination Country",options=["Japan", "USA"])
 
     qualification = st.selectbox(label="Qualification",options=["+2","Bachelors","Masters"])
@@ -58,7 +60,7 @@ with st.sidebar:
 
 
 if submit_button:
-    prompt = f"Assist in writing a {no_of_words}-word statement of purpose for a Nepali student who has completed {qualification}. The student has studied {studied_subjects} and is applying to study in {destination_country}. Include details about their academic journey, specific reasons for choosing {destination_country}'s education system, and their fascination with its culture. Also, reflect on how the education and experiences gained will help the student contribute to society, aligned with their personal goal of {life_aim}. Use simple language suitable for someone whose first language is not English"
+    prompt = f"Write a {no_of_words}-word Statement of Purpose (SOP) for a Nepali student who has completed {qualification} and is currently engaged in {currently_busy_on}. The student has a background in {studied_subjects} and is applying to study in {destination_country}. Highlight their academic journey, specific reasons for choosing the education system of {destination_country}, and their appreciation for its culture. Explain how the knowledge and experiences gained will help them contribute to society, aligning with their personal goal of {life_aim}. Use clear, simple language suitable for a non-native English speaker, avoiding the mention of any specific university or student name."
     # response = ollama.chat(model='llama3.2', messages=[{
     #     'role': 'user',
     #     'content': prompt},])
